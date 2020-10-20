@@ -36,8 +36,54 @@ class HeaderView: UICollectionReusableView {
 //            imageView.rightAnchor.constraint(equalTo: rightAnchor),
 //        ])
         
+        setupGradientLayer()
+        
+        setupLabels()
+        
         //adding blur
         setupVisualEffectBlur()
+    }
+    
+    fileprivate func setupGradientLayer() {
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.colors = [UIColor.clear.cgColor, UIColor.black.cgColor]
+        gradientLayer.locations = [0.5, 1]
+        
+        let gradientContainerView = UIView()
+        addSubview(gradientContainerView)
+        gradientContainerView.anchor(top: nil, leading: self.leadingAnchor, bottom: self.bottomAnchor, trailing: self.trailingAnchor)
+        gradientContainerView.layer.addSublayer(gradientLayer)
+        
+        gradientLayer.frame = self.bounds
+        gradientLayer.frame.origin.y -= self.bounds.height
+    }
+    
+    fileprivate func setupLabels() {
+        let titleLabel = UILabel()
+        titleLabel.text = "Title"
+        titleLabel.font = .systemFont(ofSize: 34, weight: .heavy)
+        titleLabel.numberOfLines = 0
+        titleLabel.textColor = .white
+        
+        let subtitleLabel = UILabel()
+        subtitleLabel.text = "Subtitle"
+        subtitleLabel.font = .systemFont(ofSize: 18, weight: .regular)
+        subtitleLabel.numberOfLines = 0
+        subtitleLabel.textColor = .white
+        
+        let stackView = UIStackView(arrangedSubviews: [titleLabel, subtitleLabel])
+        stackView.axis = .vertical
+        stackView.alignment = .leading
+        stackView.spacing = 3
+        
+        addSubview(stackView)
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20),
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20)
+        ])
+    
     }
     
     var animator: UIViewPropertyAnimator!
@@ -51,6 +97,7 @@ class HeaderView: UICollectionReusableView {
             
             visualEffectView.effect = UIBlurEffect(style: .regular)
         })
+        animator.fractionComplete = 0
     }
     
     required init?(coder: NSCoder) {
